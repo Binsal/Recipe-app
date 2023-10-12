@@ -11,6 +11,8 @@ const CUISINEURL =
 
 let searchValue = "";
 let filteredArrOfRecipes = [];
+let arrOfSelectedCuisine = [];
+
 
 const createElement = (element)=> document.createElement(element); 
 
@@ -35,6 +37,13 @@ const getFilteredData = () => {
         )
       : recipes;
 
+      if (arrOfSelectedCuisine?.length > 0) {
+        filteredArrOfRecipes =
+          searchValue?.length < 1 ? recipes : filteredArrOfRecipes;
+        filteredArrOfRecipes = filteredArrOfRecipes.filter((recipe) =>
+          arrOfSelectedCuisine.includes(recipe.Cuisine)
+        );
+      }
     return filteredArrOfRecipes;
 };
 
@@ -45,10 +54,27 @@ const searchInputHandler = (event) => {
     getRecipeCard(filteredData, cardParentContainer, createElement);
   };
 
+const handleCusineClick = (event) =>{
+    const id = event.target.dataset.id;
+  const isSelected = event.target.checked;
+  const selectedCuisine = cuisines.reduce(
+    (acc, cur) => (cur.ID === acc ? cur.Cuisine : acc),
+    id
+  );
+  arrOfSelectedCuisine = isSelected
+    ? [...arrOfSelectedCuisine, selectedCuisine]
+    : arrOfSelectedCuisine.filter((cuisine) => cuisine !== selectedCuisine);
+  const filteredArrOfCuisine = getFilteredData();
+  cardParentContainer.innerHTML = "";
+
+  getRecipeCard(filteredArrOfCuisine, cardParentContainer, createElement);
+};
+
 searchBox.addEventListener("keyup", searchInputHandler);
+
+cuisineParentContainer.addEventListener("click", handleCusineClick);
 
 getRecipeCard(recipes, cardParentContainer, createElement);
 getCuisineCard(cuisines, cuisineParentContainer, createElement);
-
 
 
