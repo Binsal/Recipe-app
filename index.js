@@ -78,3 +78,13 @@ getRecipeCard(recipes, cardParentContainer, createElement);
 getCuisineCard(cuisines, cuisineParentContainer, createElement);
 
 
+cardParentContainer.addEventListener("click", (event) => {
+    const cardId = event.target.dataset.id;
+    if (cardId) {
+      localStorage.clear();
+      localStorage.setItem("id", cardId);
+      location.href = "single-recipe.html";
+    }
+  });
+  
+  console.log(recipes);
